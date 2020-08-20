@@ -1,2 +1,16 @@
 ---
 # defaults file for minikube
+docker_deb_package_url: https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64
+docker_deb_packages:
+  - "{{ docker_deb_package_url }}/containerd.io_1.2.13-2_amd64.deb"
+  - "{{ docker_deb_package_url }}/docker-ce-cli_19.03.12~3-0~ubuntu-focal_amd64.deb"
+  - "{{ docker_deb_package_url }}/docker-ce_19.03.12~3-0~ubuntu-focal_amd64.deb"
+
+minikube_user: minikube
+minikube_group: minikube
+minikube_deb_package: https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
+minikube_dependency_packages:
+  - kubectl
+  - conntrack
+  
+

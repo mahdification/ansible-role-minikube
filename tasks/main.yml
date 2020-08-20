@@ -1,2 +1,45 @@
 ---
 # tasks file for minikube
+- name: Install Docker and Minikube Ubuntu/Debian Package
+  apt:
+    deb: "{{ item }}"
+  with_items: 
+    - "{{ docker_deb_packages }}"
+    - "{{ minikube_deb_package }}"
+
+- name: create minikube group
+  group:
+    name: "{{ minikube_user }}"
+    state: present
+
+- name: create minikube user
+  user:
+    name: "{{ minikube_user }}"
+    groups:
+      - docker
+    shell: /bin/bash
+    state: present
+
+- name: add kubectl source.list key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: add kubectl deb repo
+  apt_repository:
+    repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+    state: present
+
+- name: Install kubectl
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ minikube_dependency_packages }}"
+  
+- name: Download minikube
+  get_url:
+    dest: /usr/local/bin/minikube
+    url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    mode: "755"
+    owner: "{{ minikube_user }}"
+    group: "{{ minikube_group }}"
